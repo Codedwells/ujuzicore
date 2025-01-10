@@ -6,20 +6,16 @@ import express from 'express'
 import router from './router/router'
 import compression from 'compression'
 import { Borgen, Logger } from 'borgen'
-import { Config } from './utils/config'
 import cookieParser from 'cookie-parser'
-import connectDb from './database/connectDb'
-import { setupWebSocketServer } from './sockets'
 
 const app = express()
 
 const server = http.createServer(app)
-export const wss = setupWebSocketServer(server)
 
 // Middleware
 app.use(
   cors({
-    origin: [Config.FRONTEND_URL],
+    origin: ["http://localhost:3000"],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   }),
@@ -35,14 +31,13 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/', router)
 
 const startServer = async () => {
-  server.listen(Config.SERVER_PORT, () => {
+  server.listen(8001, () => {
     Logger.info({
-      message: `Server is listening on port ${Config.SERVER_PORT}`,
+      message: `Server is listening on port 8001`,
       messageColor: 'greenBright',
       infoColor: 'whiteBright',
     })
   })
 }
 
-// Connect to the database. Then Start Server
-connectDb(startServer)
+startServer()
